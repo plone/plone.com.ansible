@@ -1,0 +1,22 @@
+---
+
+- name: Supervisor task {{ name }} is present
+  template:
+    src=task.conf.j2
+    dest={{ supervisor_config_dir }}/{{ name }}.conf
+    owner=root
+    group=root
+    mode=644
+  register: supervisor_task_conf
+  sudo: yes
+
+- name: Supervisor task list is updated
+  when: supervisor_task_conf|changed
+  shell: "{{ supervisorctl_command }} update"
+  sudo: yes
+
+- name: Supervisor task {{ name }} is present
+  supervisorctl:
+    name={{ name }}
+    state=present
+  sudo: yes

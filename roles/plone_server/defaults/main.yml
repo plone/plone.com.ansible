@@ -1,0 +1,7 @@
+---
+
+base_dir: '/usr/local/plone'
+python_version: '2.7'
+instance_name: 'zeocluster'
+run_buildout: False
+buildout_repo: https://github.com/smcmahon/test_buildout.git

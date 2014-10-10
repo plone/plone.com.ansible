@@ -1,0 +1,40 @@
+---
+
+- hosts: all
+  sudo: yes
+  gather_facts: no
+
+  vars:
+    # users:
+    #   # - name: steve
+    #   #   sudoer: yes
+    #   #   auth_key: ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6IMFOP2K/n2UbtP29d9hU1Ae9vkxpCtd87H7PX5xBfjsh1Tkvq3rRE+Jr6pzPja4gPRCikLm3fV3PdEp4eh1OaSP4SnuBFWcHOpxdDuU+pjNdGMBZlQqjzC0cxjAvW7ZtnT7YHYzH6zHr+t7Z8IESsnw7idDUCupr4Zqot7PaylnI4NLb1zQQxyD+XnjPRu8Ne/0JSyKizkCkXhUuYDbvRYFAs/jFm3pmurodrOx62cwVpdztsHiK5mdTwIQhObzSb3ZnDLNNfXO3yUcX9kWJ6eQ9iP5whw2OBddf+2EoCZtshYIqtGNYaFFdf8tGF5ZwugCHxe/gzlzDMVb9ZM49w== steve@dcn.org
+    #   #   keyfiles:
+    #   #   group:
+    #   - name: plone_buildout
+    #     sudoer: no
+    #     auth_key:
+    #     group: plone_group
+    #     keyfiles: zope_user_keys
+
+  pre_tasks:
+    - name: Ensure plone_group
+      group: name=plone_group
+
+  # roles:
+  #   - scponly
+  #   - create_users
+
+  tasks:
+    - name: Ensure plone_daemon
+      user:
+        name=plone_daemon
+        group=plone_group
+        shell=/bin/bash
+        createhome=yes
+        # generate_ssh_key=yes
+
+    - name: Ensure plone_buildout
+      user:
+        name=plone_buildout
+        group=plone_group

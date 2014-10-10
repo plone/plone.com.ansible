@@ -1,0 +1,42 @@
+---
+
+- hosts: all
+  sudo: yes
+  gather_facts: no
+
+  tasks:
+
+    - name: Pack cron job
+      cron:
+        name="Plone packing"
+        job="cd /usr/local/plone/zeocluster && bin/zeopack && bin/zeopack -S catalog -D 0"
+        user=plone_daemon
+        minute=30
+        hour=3
+        weekday=0
+
+    - name: Backup cron job
+      cron:
+        name="Plone backup"
+        job="cd /usr/local/plone/zeocluster && bin/backup"
+        user=plone_daemon
+        minute=20
+        hour=1
+        weekday="1-6"
+
+    # - name: Full backup cron job
+    #   cron:
+    #     name="Plone full backup"
+    #     job="cd /usr/local/plone/zeocluster && bin/fullbackup"
+    #     user=plone_daemon
+    #     minute=20
+    #     hour=1
+    #     weekday="0"
+
+    - name: Member data dump
+      cron:
+        name="Member data dump"
+        job="cd /usr/local/plone/zeocluster && bin/client_reserve run run_scripts/memberdatadump-cronviews.py"
+        user=plone_daemon
+        minute=0
+        hour=1

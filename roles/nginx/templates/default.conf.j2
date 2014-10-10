@@ -1,0 +1,9 @@
+server {
+  listen {{ listen_on | default("80 default_server") }};
+  server_name {{ server_hostname }};
+
+  location / {
+    rewrite ^/(.*)$ /VirtualHostBase/http/{{ server_hostname }}:80/VirtualHostRoot/Plone/$1 break;
+    proxy_pass http://localhost:6081;
+  }
+}

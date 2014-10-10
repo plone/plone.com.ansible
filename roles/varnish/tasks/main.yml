@@ -1,0 +1,30 @@
+---
+
+- name: varnish package present
+  apt: pkg=varnish state=present
+
+# - name: Set cache to 512MB
+#   replace:
+#     dest=/etc/default/varnish
+#     regexp='-s ma# lloc,256m"'
+#     replace='-s malloc,512m"'
+#     backup=yes
+#   notify: restart varnish
+
+# We're firewalling off the admin port,
+# so we don't need a secret.
+
+- name: Turn off secret
+  lineinfile:
+    dest=/etc/default/varnish
+    regexp="^\s+-S .*$"
+    state=absent
+    backup=yes
+  notify: restart varnish
+
+- name: default.vcl
+  template:
+    src=default.vcl.j2
+    dest=/etc/varnish/default.vcl
+    backup=yes
+  notify: restart varnish

@@ -1,0 +1,59 @@
+---
+
+# vars:
+#   users:
+#     - name: steve
+#       sudoer: yes
+#       auth_key: ssh-rsa ...
+
+
+- name: Add users
+  user:
+    name={{ item.name }}
+    system={{ item.sudoer }}
+    shell=/bin/bash
+    group={{ item.group  }}
+  when: item.group
+  with_items: users
+
+- name: Add users
+  user:
+    name={{ item.name }}
+    system={{ item.sudoer }}
+    shell=/bin/bash
+  when: not item.group
+  with_items: users
+
+- name: Add .ssh directories
+  file:
+    path=/home/{{ item.name }}/.ssh
+    state=directory
+    owner={{ item.name }}
+  with_items: users
+
+- name: Add keys
+  lineinfile:
+    dest=/home/{{ item.name }}/.ssh/authorized_keys
+    state=present
+    create=yes
+    line="{{ item.auth_key }}"
+    owner={{ item.name }}
+  with_items: users
+
+- name: Add to sudoers
+  lineinfile:
+    dest=/etc/sudoers.d/{{ item.name }}
+    state=present
+    create=yes
+    line="{{ item.name }}  ALL=(ALL) NOPASSWD:ALL"
+    mode=440
+  when: item.sudoer
+  with_items: users
+
+- name: SSH keys
+  copy:
+    src={{ item.keyfiles }}/
+    dest=/home/{{ item.name }}/.ssh/
+    owner={{ item.name }}
+  when: item.keyfiles
+  with_items: users

@@ -1,0 +1,1 @@
+plone.com ansible_ssh_user=ploneai ansible_ssh_host=104.130.202.87

@@ -1,0 +1,85 @@
+---
+
+- name: Ensure base directory
+  file:
+    path={{ base_dir}}
+    state=directory
+
+- name: Python virtualenv
+  command: /usr/local/bin/virtualenv --python=python{{ python_version }} --no-setuptools {{ base_dir }}/Python-{{ python_version }}
+    creates={{ base_dir }}/Python-{{ python_version }}
+
+- name: Buildout cache directory
+  file:
+    path={{ base_dir }}/buildout-cache
+    state=directory
+    owner=plone_buildout
+    group=plone_group
+
+- name: Buildout cache eggs directory
+  file:
+    path={{ base_dir }}/buildout-cache/eggs
+    state=directory
+    owner=plone_buildout
+    group=plone_group
+
+- name: Buildout cache downloads directory
+  file:
+    path={{ base_dir }}/buildout-cache/downloads
+    state=directory
+    owner=plone_buildout
+    group=plone_group
+
+- name: Instance directory
+  copy:
+    src=instance/
+    dest={{ base_dir }}/{{ instance_name }}
+    owner=plone_buildout
+    group=plone_group
+
+# - name: Instance directory via git
+#   git:
+#     repo={{ buildout_repo }}
+#     force=no
+#     dest={{ base_dir }}/{{ instance_name }}
+#     version={{ buildout_version | default('HEAD') }}
+#     depth=1
+#     accept_hostkey=yes
+#   sudo_user: plone_buildout
+
+- name: Instance var directory
+  file:
+    path={{ base_dir }}/{{ instance_name }}/var
+    state=directory
+    owner=plone_buildout
+    group=plone_group
+    mode=02775
+
+- name: Python eggs directory
+  file:
+    path={{ base_dir }}/{{ instance_name }}/var/.python-eggs
+    state=directory
+    owner=plone_daemon
+    group=plone_group
+
+- name: Beaker sessions directory
+  file:
+    path={{ base_dir }}/{{ instance_name }}/var/sessions
+    state=directory
+    owner=plone_daemon
+    group=plone_group
+
+- name: bootstrap buildout
+  command: ../Python-2.7/bin/python bootstrap.py
+    creates={{ base_dir }}/{{ instance_name }}/bin/buildout
+    chdir={{ base_dir }}/{{ instance_name }}
+  sudo_user: plone_buildout
+
+- name: run buildout
+  command: bin/buildout
+    chdir={{ base_dir }}/{{ instance_name }}
+  when: run_buildout
+  sudo_user: plone_buildout
+
+
+

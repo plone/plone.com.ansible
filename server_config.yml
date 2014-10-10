@@ -1,0 +1,103 @@
+---
+- hosts: all
+  sudo: yes
+  gather_facts: no
+
+  vars:
+      admin_email: steve@reidmcmahon.com
+
+  pre_tasks:
+    - name: Update host
+      apt: upgrade=dist update_cache=yes
+
+    - name: Ensure required packages
+      apt: pkg={{ item }} state=present
+      with_items:
+        - build-essential
+        - python-dev
+        - python-pip
+        - libz-dev
+        - libssl-dev
+        - libjpeg-dev
+        - libxslt1-dev
+        - poppler-utils
+        - lynx-cur
+        - unzip
+        - supervisor
+        - git
+        - wv
+
+    - name: Ensure recent python-virtualenv
+      pip: name=virtualenv
+      # note that this installs to /usr/local/bin
+      # which is not automatically on the path
+
+  roles:
+    - autoupgrade
+
+    # - postfix
+
+    - {role: plone_server,
+        base_dir: '/usr/local/plone',
+        instance_name: 'zeocluster',
+        force_buildout: False,
+        tags: ['plone_server']
+      }
+
+    - {role: ansible-role-supervisor,
+          name: zeoserver,
+          command: /usr/local/plone/zeocluster/bin/zeoserver fg,
+          directory: /usr/local/plone/zeocluster,
+          stopwaitsecs: 30,
+          user: plone_daemon,
+          tags: ['supervisor']
+      }
+    - {role: ansible-role-supervisor,
+          name: client1,
+          command: /usr/local/plone/zeocluster/bin/client1 console,
+          directory: /usr/local/plone/zeocluster,
+          stopwaitsecs: 30,
+          user: plone_daemon,
+          tags: ['supervisor']
+      }
+    - {role: ansible-role-supervisor,
+          name: client2,
+          command: /usr/local/plone/zeocluster/bin/client2 console,
+          directory: /usr/local/plone/zeocluster,
+          stopwaitsecs: 30,
+          user: plone_daemon,
+          tags: ['supervisor']
+      }
+
+    - {role: load_balancer,
+        listen_name: plone,
+        listen_port: 8080,
+        clients: [
+            {'name': 'plone4_1', 'port': 8081},
+            {'name': 'plone4_2', 'port': 8082},
+            ],
+        tags: ['load_balancer']
+      }
+
+    - {role: varnish,
+        tags: ['varnish']
+      }
+
+    - {role: nginx,
+        server_hostname: new.plone.com,
+        tags: ['nginx']
+      }
+
+    # - logwatch
+    # - munin-node
+
+    # - { role: rsyncd, tags: ['rsyncd'] }
+
+
+  tasks:
+
+    # - name: Update motd
+    #   copy:
+    #     dest=/etc/motd
+    #     content="{{ motd }}"
+
