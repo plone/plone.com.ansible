@@ -8,7 +8,7 @@ These do not handle live data transfer.
 Prerequisites
 -------------
 
-Ubuntu 14.04 server and an ssh login with full sudu.
+Ubuntu 14.04 server and an ssh login with full sudo.
 
 Typical use::
 
