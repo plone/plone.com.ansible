@@ -1,6 +1,7 @@
 server {
   listen {{ listen_on | default("80 default_server") }};
   server_name {{ server_hostname }};
+  client_max_body_size 20M;
 
   location / {
     rewrite ^/(.*)$ /VirtualHostBase/http/{{ server_hostname }}:80/VirtualHostRoot/Plone/$1 break;
