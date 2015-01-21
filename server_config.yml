@@ -26,6 +26,7 @@
         - supervisor
         - git
         - wv
+        - fail2ban
 
     - name: Ensure recent python-virtualenv
       pip: name=virtualenv

@@ -4,7 +4,7 @@ server {
   client_max_body_size 20M;
 
   location / {
-    rewrite ^/(.*)$ /VirtualHostBase/http/{{ server_hostname }}:80/VirtualHostRoot/Plone/$1 break;
+    rewrite ^/(.*)$ /VirtualHostBase/http/{{ server_hostname }}:80/VirtualHostRoot/plonecom/$1 break;
     proxy_pass http://localhost:6081;
   }
 }
