@@ -13,7 +13,7 @@
     system={{ item.sudoer }}
     shell=/bin/bash
     group={{ item.group  }}
-  when: item.group
+  when: item.group is defined
   with_items: users
 
 - name: Add users
@@ -21,7 +21,7 @@
     name={{ item.name }}
     system={{ item.sudoer }}
     shell=/bin/bash
-  when: not item.group
+  when: item.group is not defined
   with_items: users
 
 - name: Add .ssh directories
@@ -41,12 +41,13 @@
   with_items: users
 
 - name: Add to sudoers
-  lineinfile:
-    dest=/etc/sudoers.d/{{ item.name }}
-    state=present
-    create=yes
-    line="{{ item.name }}  ALL=(ALL) NOPASSWD:ALL"
-    mode=440
+  copy:
+    dest: /etc/sudoers.d/{{ item.name }}
+    content: |
+             {{ item.name }}  ALL=(ALL) ALL
+             {{ item.name }}  ALL=(plone_daemon, plone_buildout) NOPASSWD:ALL
+             {{ item.name }}  ALL=(root) NOPASSWD:/usr/bin/supervisorctl
+             #
   when: item.sudoer
   with_items: users
 
@@ -55,5 +56,5 @@
     src={{ item.keyfiles }}/
     dest=/home/{{ item.name }}/.ssh/
     owner={{ item.name }}
-  when: item.keyfiles
+  when: item.keyfiles is defined
   with_items: users
