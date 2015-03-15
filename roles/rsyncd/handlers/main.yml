@@ -1,0 +1,4 @@
+---
+
+- name: restart rsyncd
+  command: service rsync restart

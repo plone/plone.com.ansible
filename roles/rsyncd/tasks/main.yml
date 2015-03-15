@@ -1,0 +1,39 @@
+---
+
+- name: Enable rsyncd
+  lineinfile:
+    dest='/etc/default/rsync'
+    regexp='^RSYNC_ENABLE='
+    line='RSYNC_ENABLE=true'
+  notify: restart rsyncd
+
+- name: Nice rsyncd
+  lineinfile:
+    dest=/etc/default/rsync
+    regexp="^RSYNC_NICE="
+    line="RSYNC_NICE='10'"
+  notify: restart rsyncd
+
+- name: IONice rsyncd
+  lineinfile:
+    dest=/etc/default/rsync
+    regexp="(# )?RSYNC_IONICE='-c3'"
+    line="RSYNC_IONICE='-c3'"
+  notify: restart rsyncd
+
+- name: rsyncd.conf
+  copy:
+    content="{{ rsyncd_conf }}"
+    dest=/etc/rsyncd.conf
+  notify: restart rsyncd
+
+- name: rsyncd.secrets
+  copy:
+    content=" {{ rsyncd_secrets }}"
+    dest=/etc/rsyncd.secrets
+    mode=400
+  notify: restart rsyncd
+  when: rsync_secrets is defined
+
+- name: Ensure rsync running
+  service: name=rsync state=started

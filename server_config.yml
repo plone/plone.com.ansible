@@ -6,6 +6,19 @@
   vars:
       admin_email: steve@reidmcmahon.com
 
+      rsyncd_conf: |
+        max connections = 2
+        timeout = 300
+
+        [plonecom]
+        comment = plone.com Plone var
+        path = /usr/local/plone/zeocluster/var
+        read only = yes
+        list = no
+        uid = plone_daemon
+        gid = plone_group
+
+
   pre_tasks:
     - name: Update host
       apt: upgrade=dist update_cache=yes
@@ -32,6 +45,7 @@
       pip: name=virtualenv
       # note that this installs to /usr/local/bin
       # which is not automatically on the path
+
 
   roles:
     - autoupgrade
@@ -89,10 +103,11 @@
         tags: ['nginx']
       }
 
+    - { role: rsyncd, tags: ['rsyncd'] }
+
     # - logwatch
     # - munin-node
 
-    # - { role: rsyncd, tags: ['rsyncd'] }
 
 
   tasks:
