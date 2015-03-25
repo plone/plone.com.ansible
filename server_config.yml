@@ -99,7 +99,7 @@
       }
 
     - {role: nginx,
-        server_hostname: new.plone.com,
+        server_hostname: plone.com,
         tags: ['nginx']
       }
 
