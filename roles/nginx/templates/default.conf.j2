@@ -8,3 +8,19 @@ server {
     proxy_pass http://localhost:6081;
   }
 }
+
+
+server {
+  server_name www.plone.com
+  listen 80;
+  access_log off;
+  rewrite ^/(.*)$  http://plone.com/$1 permanent;
+}
+
+
+server {
+  server_name new.plone.com
+  listen 80;
+  access_log off;
+  rewrite ^/(.*)$  http://plone.com/$1 permanent;
+}
