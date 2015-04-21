@@ -1,0 +1,4 @@
+---
+
+- name: restart munin-node
+  command: /etc/init.d/munin-node restart

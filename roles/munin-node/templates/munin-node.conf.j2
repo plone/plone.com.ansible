@@ -1,0 +1,33 @@
+# munin-node config
+
+log_level 4
+log_file /var/log/munin/munin-node.log
+pid_file /var/run/munin/munin-node.pid
+
+background 1
+setsid 1
+
+user munin
+group munin
+
+# Regexps for files to ignore
+
+ignore_file ~$
+ignore_file \.bak$
+ignore_file %$
+ignore_file \.dpkg-(tmp|new|old|dist)$
+ignore_file \.rpm(save|new)$
+ignore_file \.pod$
+
+allow ^127\.0\.0\.1$
+{% if muninnode_query_ips is defined %}
+{% for address in muninnode_query_ips %}
+allow {{ "^" + address.replace(".", "\\.") + "$" }}
+{% endfor %}
+{% endif %}
+
+# Which address to bind to;
+host *
+
+# And which port
+port {{ munin_node_port }}

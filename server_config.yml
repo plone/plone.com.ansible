@@ -106,7 +106,11 @@
     - { role: rsyncd, tags: ['rsyncd'] }
 
     # - logwatch
-    # - munin-node
+
+    - {role: munin-node,
+        muninnode_query_ips: ['10.177.1.141'],
+        tags: ['munin'],
+      }
 
 
 

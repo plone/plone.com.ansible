@@ -16,7 +16,9 @@
     ufw: rule=allow port=80 proto=tcp
   - name: 443 is open
     ufw: rule=allow port=443 proto=tcp
-  - name: 873 (rsyncd) is open to backup
+  - name: 873 (rsyncd) is open to backup (rackspace internal network)
     ufw: rule=allow port=873 proto=tcp from_ip=10.177.1.141
+  - name: 4949 (munin-node) is open to backup (rackspace internal network)
+    ufw: rule=allow port=4949 proto=tcp from_ip=10.177.1.141
 
 

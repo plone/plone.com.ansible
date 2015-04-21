@@ -1,4 +1,4 @@
-Server Ansible Playbooks
+plone_comServer Ansible Playbooks
 ========================
 
 Ansible playbooks meant to be sufficient to build or rebuild a server with minimal preparation.
@@ -12,10 +12,10 @@ Ubuntu 14.04 server and an ssh login with full sudo.
 
 Typical use::
 
-    ansible-playbook -i linode_host firewall.yml
-    ansible-playbook -i linode_host add_users.yml
-    ansible-playbook -i linode_host server_config.yml
-    ansible-playbook -i linode_host cron_jobs.yml
+    ansible-playbook -i plone_com_host -K firewall.yml
+    ansible-playbook -i plone_com_host -K add_users.yml
+    ansible-playbook -i plone_com_host -K server_config.yml
+    ansible-playbook -i plone_com_host -K cron_jobs.yml
 
 Playbooks
 ---------
@@ -40,9 +40,8 @@ The real worker: Installs required packages, sets up:
 * supervisor
 * haproxy
 * varnish
-* apache
-* logwatch
-* munin
+* nginx
+* munin-node
 
 This playbook does *NOT* run buildout. Log in and do that separately.
 
