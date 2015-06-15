@@ -40,6 +40,7 @@
         - git
         - wv
         - fail2ban
+        - update-notifier
 
     - name: Ensure recent python-virtualenv
       pip: name=virtualenv

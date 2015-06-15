@@ -36,11 +36,6 @@ sub vcl_recv {
         }
     }
 
-    # Always cache these file types
-    if (req.url ~ "(?i)\.(pdf|asc|dat|txt|doc|xls|ppt|tgz|png|gif|jpeg|jpg|ico|swf|css|js)(\?.*)?$") {
-        unset req.http.Cookie;
-    }
-
 
     # Handle special requests
     if (req.request != "GET" && req.request != "HEAD") {
@@ -76,13 +71,8 @@ sub vcl_recv {
 
     # Don't cache authenticated requests
     if (req.http.Cookie && req.http.Cookie ~ "__ac(|_(name|password|persistent))=") {
-       # Force lookup of specific urls unlikely to need protection
-       if (req.url ~ "\.(gif|jpg|png|js|css|kss)") {
-           unset req.http.cookie;
-               return(lookup);
-       }
        return(pass);
-   }
+    }
 
     if (req.http.Authorization) {
         unset req.http.Authorization;

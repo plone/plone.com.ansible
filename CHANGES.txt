@@ -1,0 +1,4 @@
+2015-06-15
+
+- Don't remove auth cookies from .js, .css, etc. Otherwise, they
+  can't be accessed or changed when in private folders.
