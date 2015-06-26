@@ -4,6 +4,9 @@ server {
   client_max_body_size 20M;
 
   location / {
+    if ($http_x_forwarded_proto = "https") {
+        rewrite ^/(.*)$ /VirtualHostBase/https/{{ server_hostname }}:443/plonecom/VirtualHostRoot/$1 break;
+    }
     rewrite ^/(.*)$ /VirtualHostBase/http/{{ server_hostname }}:80/plonecom/VirtualHostRoot/$1 break;
     proxy_pass http://localhost:6081;
   }
