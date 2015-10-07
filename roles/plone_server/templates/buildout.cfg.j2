@@ -24,7 +24,16 @@ need-sudo = yes
 eggs =
     Plone
     Pillow
+    plone4.csrffixes
+    Products.PloneFormGen
+    uwosh.pfg.d2c
 
+# legacy items from older plone.com
+    plone.app.dexterity [grok]
+    collective.behavior.contactinfo
+    eea.facetednavigation
+    Products.Carousel
+    Products.ContentWellPortlets
 
 zcml =
 #    plone.reload
@@ -143,3 +152,28 @@ collective.recipe.backup = 2.17
 plone.recipe.unifiedinstaller = 4.3.1
 zopeskel.dexterity = 1.5.4.1
 zopeskel.diazotheme = 1.1
+Products.Carousel = 2.2.1
+Products.ContentWellPortlets = 4.2.1
+Products.PloneFormGen = 1.7.16
+Products.PythonField = 1.1.3
+Products.TemplateFields = 1.2.5
+collective.behavior.contactinfo = 0.9
+eea.faceted.vocabularies = 5.0
+eea.facetednavigation = 7.5
+plone.recipe.precompiler = 0.6
+uwosh.pfg.d2c = 2.4.6
+
+# Required by:
+# uwosh.pfg.d2c==2.4.6
+Products.TALESField = 1.1.3
+
+# Required by:
+# eea.facetednavigation==7.5
+eea.jquery = 8.2
+
+plone.protect = 3.0.13
+plone.keyring = 3.0.1
+plone.locking = 2.0.8
+plone4.csrffixes = 1.0.4
+cssselect = 0.9.1
+
